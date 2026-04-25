@@ -13,7 +13,8 @@ UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
 # API Key
 # =========================
 # Öncelik OPENAI_API_KEY; eski kullanım için APIKEY de desteklenir.
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or os.getenv("APIKEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
 
 # =========================
 # RAG Ayarları
@@ -31,7 +32,7 @@ MAX_TOP_K = 10
 # =========================
 # LLM Ayarları
 # =========================
-LLM_MODEL = "gpt-3.5-turbo"
+LLM_MODEL = "llama-3.3-70b-versatile"
 MAX_TOKENS = 1000
 TEMPERATURE = 0.2
 
