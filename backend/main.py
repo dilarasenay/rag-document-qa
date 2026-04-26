@@ -3,8 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import os
+import sys
 import shutil
 import uuid
+
+# Backend dizinini path'e ekle (Import hatalarını önlemek için)
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from config import UPLOAD_DIR, ALLOWED_EXTENSIONS, MAX_UPLOAD_SIZE
 from file_processor import extract_text

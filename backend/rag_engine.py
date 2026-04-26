@@ -1,6 +1,6 @@
 from openai import OpenAI
 from embeddings import search
-from config import OPENAI_API_KEY, LLM_MODEL, MAX_TOKENS, TEMPERATURE, DEFAULT_TOP_K
+from config import GROQ_API_KEY, LLM_MODEL, MAX_TOKENS, TEMPERATURE, DEFAULT_TOP_K
 
 
 def ask_question(question: str, selected_files=None, top_k: int = DEFAULT_TOP_K):
@@ -15,15 +15,15 @@ def ask_question(question: str, selected_files=None, top_k: int = DEFAULT_TOP_K)
             "chunks": []
         }
 
-    if not OPENAI_API_KEY:
+    if not GROQ_API_KEY:
         return {
-            "answer": "OpenAI API anahtarı bulunamadı. Lütfen .env dosyasını kontrol edin.",
+            "answer": "Groq API anahtarı bulunamadı. Lütfen .env dosyasını kontrol edin.",
             "sources": [],
             "chunks": []
         }
 
     try:
-        client = OpenAI(api_key=OPENAI_API_KEY)
+        client = OpenAI(api_key=GROQ_API_KEY, base_url="https://api.groq.com/openai/v1")
 
         relevant_chunks = search(
             query=question,
