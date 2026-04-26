@@ -21,12 +21,12 @@ html, body,
     background: #FFFFFF !important;
     border-right: 1px solid #E8E4DC !important;
     box-shadow: 2px 0 12px rgba(0,0,0,0.04) !important;
-    min-width: 360px !important;
-    max-width: 360px !important;
+    min-width: 300px !important;
+    max-width: 300px !important;
 }
 
 [data-testid="stSidebar"] > div:first-child {
-    width: 360px !important;
+    width: 300px !important;
 }
 
 /* ── Typography ── */
@@ -228,12 +228,34 @@ html, body,
     white-space: pre-wrap;
 }
 
+/* ── Export Button ── */
+.export-wrap button,
+.export-wrap [data-testid="stDownloadButton"] button,
+[data-testid="stDownloadButton"] button {
+    background: #F0FDF4 !important;
+    border-color: #BBF7D0 !important;
+    color: #15803D !important;
+    font-weight: 500 !important;
+}
+.export-wrap button:hover,
+.export-wrap [data-testid="stDownloadButton"] button:hover,
+[data-testid="stDownloadButton"] button:hover {
+    background: #DCFCE7 !important;
+    border-color: #86EFAC !important;
+    color: #166534 !important;
+}
+
 /* ── Regen Button ── */
 .regen-wrap {
     display: flex;
     align-items: flex-end;
     height: 100%;
     padding-top: 4px;
+}
+
+/* Suggestions satırındaki column gap'i sıfırla */
+.suggestions-row [data-testid="stHorizontalBlock"] {
+    gap: 0 !important;
 }
 .regen-wrap button {
     background: #EEF2FF !important;

@@ -5,44 +5,38 @@ from lang import t
 
 def render_sidebar():
     with st.sidebar:
-        # ── Logo + Dil Seçimi ──
-        col_logo, col_lang = st.columns([3, 2])
-        with col_logo:
-            st.markdown(f"""
-            <div style="
-                font-family: 'Instrument Serif', serif;
-                font-size: 1.75rem;
-                letter-spacing: -0.5px;
-                line-height: 1.1;
-                margin-bottom: 2px;
-                background: linear-gradient(135deg, #6c63ff 0%, #ff6b6b 50%, #43e97b 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-            ">📚 DocuMind</div>
-            <div style="font-size:0.78rem;color:#888;font-weight:400;letter-spacing:0.3px;">
-                {t("tagline")}
-            </div>
-            """, unsafe_allow_html=True)
-        with col_lang:
-            lang_pick = st.selectbox(
-                "",
-                ["🇹🇷 TR", "🇬🇧 EN"],
-                index=0 if st.session_state.lang == "tr" else 1,
-                label_visibility="collapsed",
-                key="lang_select"
-            )
-            new_lang = "tr" if "TR" in lang_pick else "en"
+        # ── Dil Seçimi — üst sol ──
+        lang_pick = st.selectbox(
+            "",
+            ["🇹🇷 TR", "🇬🇧 EN"],
+            index=0 if st.session_state.lang == "tr" else 1,
+            label_visibility="collapsed",
+            key="lang_select"
+        )
+        new_lang = "tr" if "TR" in lang_pick else "en"
+        if st.session_state.get("prev_lang") != new_lang:
+            st.session_state.suggested_questions = []
+            st.session_state.suggestions_for_doc = None
+            st.session_state.prev_lang = new_lang
+        st.session_state.lang = new_lang
 
-            # Dil değişince önerileri sıfırla
-            if st.session_state.get("prev_lang") != new_lang:
-                st.session_state.suggested_questions = []
-                st.session_state.suggestions_for_doc = None
-                st.session_state.prev_lang = new_lang
-
-            st.session_state.lang = new_lang
-
-        st.markdown("---")
+        # ── Logo ──
+        st.markdown(f"""
+        <div style="
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.75rem;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+            margin: 6px 0 2px 0;
+            background: linear-gradient(135deg, #6c63ff 0%, #ff6b6b 50%, #43e97b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        ">📚 DocuMind</div>
+        <div style="font-size:0.78rem;color:#888;font-weight:400;letter-spacing:0.3px;margin-bottom:4px;">
+            {t("tagline")}
+        </div>
+        """, unsafe_allow_html=True)
 
         # ── İstatistikler ──
         docs = get_documents()

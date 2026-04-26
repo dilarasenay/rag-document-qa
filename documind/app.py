@@ -6,7 +6,7 @@ from api import get_documents
 from components.sidebar import render_sidebar
 from components.summarize import render_summarize
 from components.suggestions import render_suggestions
-from components.chat import render_chat, send_question
+from components.chat import render_input, render_history, send_question
 
 # =========================
 # Sayfa Yapılandırması
@@ -65,6 +65,13 @@ render_summarize(active_docs)
 
 st.markdown("---")
 
-# ── Sohbet + Öneriler ──
-render_chat(all_visible_docs)
+# ── Önerilen Sorular ──
 render_suggestions(active_docs, send_question)
+
+st.markdown("---")
+
+# ── Soru Giriş Alanı ──
+render_input(all_visible_docs)
+
+# ── Sohbet Geçmişi ──
+render_history()

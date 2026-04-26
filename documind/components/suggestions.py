@@ -13,7 +13,8 @@ def render_suggestions(active_docs: list, send_question_fn):
         unsafe_allow_html=True
     )
 
-    sug_col1, sug_col2 = st.columns([4, 1])
+    st.markdown('<div class="suggestions-row">', unsafe_allow_html=True)
+    sug_col1, sug_col2 = st.columns([4, 1], vertical_alignment="bottom")
     with sug_col1:
         selected_doc = st.selectbox(
             t("select_doc_for_suggestions"),
@@ -29,6 +30,7 @@ def render_suggestions(active_docs: list, send_question_fn):
             use_container_width=True
         )
         st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # Doküman değiştiyse cache'i sıfırla
     if st.session_state.suggestions_for_doc != selected_doc:

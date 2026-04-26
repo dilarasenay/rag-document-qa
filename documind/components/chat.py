@@ -48,10 +48,10 @@ def _export_chat() -> str:
     return "\n".join(lines)
 
 
-def render_chat(all_visible_docs: list):
+def render_input(all_visible_docs: list):
+    """Ayarlar paneli + soru giriş alanı."""
     st.markdown(f'<div class="dm-chat-label">{t("chat_header")}</div>', unsafe_allow_html=True)
 
-    # Ayarlar
     with st.expander(f"⚙ {t('settings')}", expanded=False):
         selected_files = st.multiselect(
             t("select_docs"),
@@ -62,7 +62,32 @@ def render_chat(all_visible_docs: list):
         )
         top_k = st.slider(t("top_k"), 1, 10, 5, key="top_k_slider")
 
-    # Mesaj geçmişi
+    q_col, btn_col = st.columns([6, 1])
+    with q_col:
+        question = st.text_input(
+            "q",
+            placeholder=t("chat_placeholder"),
+            label_visibility="collapsed",
+            key="question_field",
+            value=st.session_state.get("pending_question") or ""
+        )
+    with btn_col:
+        ask_clicked = st.button(f"→ {t('ask_btn')}", use_container_width=True, key="ask_btn")
+
+    if st.session_state.get("pending_question"):
+        st.session_state.pending_question = None
+
+    if ask_clicked and question:
+        send_question(question, selected_files if selected_files else [], top_k)
+
+
+def render_history():
+    """Sohbet geçmişi + temizle/dışa aktar butonları."""
+    if not st.session_state.chat_history:
+        return
+
+    st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+
     for msg in st.session_state.chat_history:
         if msg["role"] == "user":
             st.markdown(f"""
@@ -104,40 +129,19 @@ def render_chat(all_visible_docs: list):
                         </div>
                         """, unsafe_allow_html=True)
 
-    st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
-
-    # Soru girişi
-    q_col, btn_col = st.columns([6, 1])
-    with q_col:
-        question = st.text_input(
-            "q",
-            placeholder=t("chat_placeholder"),
-            label_visibility="collapsed",
-            key="question_field",
-            value=st.session_state.get("pending_question") or ""
+    st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
+    bot_c1, bot_c2, _ = st.columns([2, 2, 4])
+    with bot_c1:
+        if st.button(f"🗑 {t('clear_btn')}", key="clear_chat"):
+            st.session_state.chat_history = []
+            st.rerun()
+    with bot_c2:
+        st.markdown('<div class="export-wrap">', unsafe_allow_html=True)
+        st.download_button(
+            label=f"↓ {t('export_btn')}",
+            data=_export_chat(),
+            file_name=f"documind_chat_{datetime.now().strftime('%Y%m%d_%H%M')}.txt",
+            mime="text/plain",
+            key="export_chat"
         )
-    with btn_col:
-        ask_clicked = st.button(f"→ {t('ask_btn')}", use_container_width=True, key="ask_btn")
-
-    if st.session_state.get("pending_question"):
-        st.session_state.pending_question = None
-
-    if ask_clicked and question:
-        send_question(question, selected_files if selected_files else [], top_k)
-
-    # Alt butonlar
-    if st.session_state.chat_history:
-        st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
-        bot_c1, bot_c2, _ = st.columns([2, 2, 4])
-        with bot_c1:
-            if st.button(f"🗑 {t('clear_btn')}", key="clear_chat"):
-                st.session_state.chat_history = []
-                st.rerun()
-        with bot_c2:
-            st.download_button(
-                label=f"↓ {t('export_btn')}",
-                data=_export_chat(),
-                file_name=f"documind_chat_{datetime.now().strftime('%Y%m%d_%H%M')}.txt",
-                mime="text/plain",
-                key="export_chat"
-            )
+        st.markdown('</div>', unsafe_allow_html=True)
